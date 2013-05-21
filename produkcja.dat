@@ -1,0 +1,35 @@
+set Machines := M1 M2 M3;   # maszyny
+set Parts := a b c d e;     # czesci produkowane
+
+param S := 4;               # liczba scenariuszy
+param limit := 180;         # limit pracy maszyny
+                            # w godzinach
+
+param add_limit := 50;      # Limit pracy maszyny
+                            # w godzinach przy nadgodzinach
+
+param surcharge := 10;      # doplata od h przy nadgodzinach
+
+param lambda := 0;
+
+param production_time:  a    b    c    d    e:=
+                    M1  70   40   150  30   100
+                    M2  80   100  90   40   70
+                    M3  140  50   40   90   100;
+
+param scenarios:    M1   M2   M3:=
+                1   20   25   30
+                2   40   30   45
+                3   35   20   40
+                4   45   50   25;
+
+param demand:=  a 60
+                b 60
+                c 60
+                d 120
+                e 120;
+
+param probability:= 1 0.3
+                    2 0.2
+                    3 0.2
+                    4 0.3;
