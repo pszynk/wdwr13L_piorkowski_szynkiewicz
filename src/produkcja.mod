@@ -5,7 +5,9 @@ param S;
 param limit;
 param add_limit;
 param surcharge;
-param lambda;
+param MAX_lambda;
+
+param lambda default 1, > 0, < MAX_lambda;
 
 param production_time{m in Machines, r in Parts};
 param scenarios{1..S, m in Machines};
@@ -46,15 +48,12 @@ subject to s_costs {s in 1..S}:
 subject to s_mean:
     (sum{s in 1..S} costs[s] * probability[s]) = mean;
 
-
+# umieszcza w zmiennej _abs_handle koszty dla scenariuszow
+# jezeli sa one mniejsze od wartosci oczekiwanej kosztu,
+# wpp zostaje 0
 subject to s__abs_handle1 {s in 1..S}:
-    costs[s] - mean <= _abs_handle[s];
-
-subject to s__abs_handle2 {s in 1..S}:
-    costs[s] - mean >= -_abs_handle[s];
-
-#subject to s_aa_deviation:
-#    ( (sum{s in 1..S} _abs_handle[s])/S ) = aa_deviation;
+    mean - costs[s] <= _abs_handle[s];
 
 subject to s_aa_deviation:
-    ( (sum{s in 1..S} _abs_handle[s] * probability[s]) ) = aa_deviation;
+    ( (sum{s in 1..S} _abs_handle[s] * probability[s])/2 ) = aa_deviation;
+
