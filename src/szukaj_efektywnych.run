@@ -1,0 +1,15 @@
+option solver_msg 0;
+
+let __i := 0;
+
+for {ll in _LAMBDAS} {
+    let __i := __i + 1;
+    printf "%d/%6d\n", __i, _lambda_set_size;
+    let lambda := ll;
+    solve;
+    if (mean == _last_cost) and (aa_deviation == _last_risk) then continue;
+    printf "%-8.4f%-12.4f%f\n", lambda, mean, aa_deviation >> (OUT_FILE);
+    if (aa_deviation <= _final_risk) or (mean >= _final_cost) then break;
+    let _last_cost := mean;
+    let _last_risk := aa_deviation;
+}

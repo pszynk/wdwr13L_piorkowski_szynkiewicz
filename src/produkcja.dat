@@ -1,5 +1,5 @@
-set Machines := M1 M2 M3;   # maszyny
-set Parts := a b c d e;     # czesci produkowane
+set MACHINES := M1 M2 M3;   # maszyny
+set PARTS := a b c d e;     # czesci produkowane
 
 param S := 4;               # liczba scenariuszy
 param limit := 180;         # limit pracy maszyny
@@ -17,7 +17,9 @@ param surcharge := 10;      # doplata od h przy nadgodzinach
 # prawd       0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
 # scenariusz    1   1   1   2   2   3   3   4   4   4
 # czyli m = 10, limit dla lambda = m/m-1 => 10/9
-param MAX_lambda := 1.11111111111;
+# UWAGA INNA OPCJA Z WYKLADU 9. m = 2 bo sa dwa kryteria: koszt i ryzyko
+#                               wtedy m/m-1 = 2
+#param MAX_lambda := 1.11111111111;
 
 param production_time:  a    b    c    d    e:=
                     M1  70   40   150  30   100

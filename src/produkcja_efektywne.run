@@ -1,0 +1,42 @@
+include produkcja_prerun.run
+
+# wybor pliku wynikowego
+let OUT_FILE := (PATH & "efektywne.txt");
+
+# krok zmiany lambdy
+param _lambda_step default 0.1;
+
+# wartosc jaka osiaga solver przy minimalozacji
+# samego ryzyka
+param _final_risk;
+let _final_risk := 388.5;
+
+param _final_cost;
+let _final_cost := 15240;
+
+param _last_cost;
+let _last_cost := 0;
+
+param _last_risk;
+let _last_risk := 0;
+
+
+param __i;
+
+param _lambda_set_size;
+
+# zbior rozpatrywanych wartosci lambda
+set _LAMBDAS;
+
+# ustawienie najwiekszego mozliwego lambda
+let MAX_lambda := 30;
+
+# wyznaczenie zbioru lambdas
+let _LAMBDAS :=
+    MIN_lambda + _lambda_step .. MAX_lambda by _lambda_step;
+
+let _lambda_set_size := card(_LAMBDAS);
+
+printf "%-8s%-12s%s\n", "lambda", "koszt", "ryzyko" > (OUT_FILE);
+
+include szukaj_efektywnych.run;

@@ -1,0 +1,49 @@
+include produkcja_prerun.run
+
+# wybor pliku wynikowego
+let OUT_FILE := (PATH & "efektywne_szczeg.txt");
+
+param _lambda_smaller_step default 0.001;
+
+param _M;
+param _lambda_step;
+set _kolumny;
+param _efektywne{1.._M, _k in _kolumny};
+
+data efektywne.dat;
+
+# wartosc jaka osiaga solver przy minimalozacji
+# samego ryzyka
+param _final_risk;
+param _final_cost;
+param _last_cost;
+param _last_risk;
+
+
+param __i;
+
+param _lambda_set_size;
+
+# zbior rozpatrywanych wartosci lambda
+set _LAMBDAS;
+
+# ustawienie najwiekszego mozliwego lambda
+let MAX_lambda := 30;
+
+printf "%-8s%-12s%s\n", "lambda", "koszt", "ryzyko" > (OUT_FILE);
+for {_p in 1.._M-1} {
+    let _LAMBDAS :=
+        _efektywne[_p+1, '_lambda'] - _lambda_step .. _efektywne[_p+1, '_lambda'] by _lambda_smaller_step;
+    let _lambda_set_size := card(_LAMBDAS);
+
+    let _last_cost := _efektywne[_p, '_koszt'];
+    let _last_risk := _efektywne[_p, '_ryzyko'];
+
+    let _final_risk := _efektywne[_p+1, '_koszt'];
+    let _final_cost := _efektywne[_p+1, '_ryzyko'];
+
+    include szukaj_efektywnych.run;
+}
+
+
+
