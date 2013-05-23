@@ -22,6 +22,11 @@ param _last_risk;
 
 param __i;
 
+param _epsilon;
+
+param _print_final;
+let _print_final := 0;
+
 param _lambda_set_size;
 
 # zbior rozpatrywanych wartosci lambda
@@ -39,8 +44,8 @@ for {_p in 1.._M-1} {
     let _last_cost := _efektywne[_p, '_koszt'];
     let _last_risk := _efektywne[_p, '_ryzyko'];
 
-    let _final_risk := _efektywne[_p+1, '_koszt'];
-    let _final_cost := _efektywne[_p+1, '_ryzyko'];
+    let _final_cost := _efektywne[_p+1, '_koszt'];
+    let _final_risk := _efektywne[_p+1, '_ryzyko'];
 
     include szukaj_efektywnych.run;
 }

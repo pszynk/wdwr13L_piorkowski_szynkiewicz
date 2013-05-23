@@ -1,7 +1,7 @@
 include produkcja_prerun.run
 
 # wybor pliku wynikowego
-let OUT_FILE := (PATH & "efektywne.txt");
+let _OUT_FILE := (_PATH & "efektywne.txt");
 
 # krok zmiany lambdy
 param _lambda_step default 0.1;
@@ -21,9 +21,15 @@ param _last_risk;
 let _last_risk := 0;
 
 
-param __i;
+param _i;
 
 param _lambda_set_size;
+
+param _epsilon;
+
+
+param _print_final;
+let _print_final := 1;
 
 # zbior rozpatrywanych wartosci lambda
 set _LAMBDAS;
@@ -37,6 +43,6 @@ let _LAMBDAS :=
 
 let _lambda_set_size := card(_LAMBDAS);
 
-printf "%-8s%-12s%s\n", "lambda", "koszt", "ryzyko" > (OUT_FILE);
+printf "%-8s%-12s%s\n", "lambda", "koszt", "ryzyko" > (_OUT_FILE);
 
 include szukaj_efektywnych.run;

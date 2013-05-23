@@ -1,14 +1,20 @@
-set MACHINES := M1 M2 M3;   # maszyny
-set PARTS := a b c d e;     # czesci produkowane
+# Maszyny
+set MACHINES := M1 M2 M3;
 
+# Czsesci
+set PARTS := a b c d e;
+
+# liczba scenariuszy
 param S := 4;               # liczba scenariuszy
-param limit := 180;         # limit pracy maszyny
-                            # w godzinach
 
-param add_limit := 50;      # Limit pracy maszyny
-                            # w godzinach przy nadgodzinach
+# limit pracy podstawowej maszyny w godzinach
+param limit := 180;
 
-param surcharge := 10;      # doplata od h przy nadgodzinach
+# limit pracy dodatkowej maszyny w godzinach
+param add_limit := 50;
+
+# doplata do godziny pracy maszyny przy nadgodzinach
+param surcharge := 10;
 
 # mamy 4 scenariusze ponumeorwane 1..4 wystepujace z prawd. 0.3 0.2 0.2 0.3
 # rownowazna sytucjabylaby dla 10 scenariuszy rownoprawdopodobynych
@@ -21,23 +27,28 @@ param surcharge := 10;      # doplata od h przy nadgodzinach
 #                               wtedy m/m-1 = 2
 #param MAX_lambda := 1.11111111111;
 
+
+# czasy produkcji czesci przez maszyny w minutach
 param production_time:  a    b    c    d    e:=
                     M1  70   40   150  30   100
                     M2  80   100  90   40   70
                     M3  140  50   40   90   100;
 
+# koszty 1h pracy maszyny w scenariuszy
 param scenarios:    M1   M2   M3:=
                 1   20   25   30
                 2   40   30   45
                 3   35   20   40
                 4   45   50   25;
 
+# zapotrzebowanie na czesci w sztukach
 param demand:=  a 60
                 b 60
                 c 60
                 d 120
                 e 120;
 
+# prawdopodobienstwo kolejnych scenariuszy
 param probability:= 1 0.3
                     2 0.2
                     3 0.2
