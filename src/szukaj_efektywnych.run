@@ -1,6 +1,6 @@
-###############################################################################
+################################################################################
 ## Skrypt do wyszukiwanie rozwiazan optymalnych dla pewnych wartosci lambda
-##############################################################################
+################################################################################
 ## PARAMETRY:
 ## --Zewnetrzne (ustawiane przed uruchomieniem skryptu)
 ##      _OUT_FILE: plik do wypisywania znalezionych punktow

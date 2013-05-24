@@ -1,3 +1,24 @@
+################################################################################
+## Ogolne poszukiwanie rozwiazan efektywnych
+################################################################################
+## 
+################################################################################
+## PARAMETRY:
+## --Zewnetrzne (ustawiane przed uruchomieniem skryptu)
+##      _OUT_FILE: plik do wypisywania znalezionych punktow
+##      _LAMBDAS: zbior wartosci lambda dla ktorych szukamy rozw. optym.
+##      _lambda_set_size: rozmiar zbior wartosci lambda.
+##      _final_cost: najwieksza wartosc kosztu dla jakiego mamy przerwac
+##                      poszukiwania
+##      _final_risk: najmniejsza wartosc ryzyka dla jakiego mamy przerwac
+##                      poszukiwania
+## --Lokalne (zmieniane w skrypcie)
+##      _epsilon: dokladnosc do porownywania liczb zmienno przecinkowych
+##      _i: do liczenia pentli
+##      _last_cost: koszt w ostatnim rozwiazaniu optymalnym
+##      _last_risk_: ryzyko w ostatnim rozwiazaniu optymalnym
+
+
 include produkcja_prerun.run
 
 # wybor pliku wynikowego
