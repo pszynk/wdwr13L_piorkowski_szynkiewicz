@@ -1,28 +1,35 @@
 ################################################################################
 ## Ogolne poszukiwanie rozwiazan efektywnych
 ################################################################################
-## 
+## Poszukiwanie polega na wyznaczaniu rozwiazania obiektywnego dla wybranych
+## wartosci lambda (wspol. awersji do ryzyka). Zaczynając od malej wartosci
+## lambda w kazdej iteracji wartosc parametru jest zwiekszana z krokiem 0.1
+## (duzy krok).
+## Zapisujemy kolejne rozniace sie rozwiazania.
+## Przeszukiwanie trwa az do uzyskania punktu rownowaznego minimalziacji samego
+## ryzyka
+## (PORUSZAMY SIE PO ROZWIAZANIACH PRZY WZROSCIE KOSZTU I SPADKU RYZYKA)
 ################################################################################
 ## PARAMETRY:
 ## --Zewnetrzne (ustawiane przed uruchomieniem skryptu)
-##      _OUT_FILE: plik do wypisywania znalezionych punktow
+##      _PATH: sciezka do folderu ze skryptem
+## --Lokalne (zmieniane w skrypcie)
 ##      _LAMBDAS: zbior wartosci lambda dla ktorych szukamy rozw. optym.
 ##      _lambda_set_size: rozmiar zbior wartosci lambda.
-##      _final_cost: najwieksza wartosc kosztu dla jakiego mamy przerwac
+##      _final_cost: najwieksza wartosc kosztu - dla jakiego mamy przerwac
 ##                      poszukiwania
-##      _final_risk: najmniejsza wartosc ryzyka dla jakiego mamy przerwac
+##      _final_risk: najmniejsza wartosc ryzyka  - dla jakiego mamy przerwac
 ##                      poszukiwania
-## --Lokalne (zmieniane w skrypcie)
 ##      _epsilon: dokladnosc do porownywania liczb zmienno przecinkowych
 ##      _i: do liczenia pentli
 ##      _last_cost: koszt w ostatnim rozwiazaniu optymalnym
 ##      _last_risk_: ryzyko w ostatnim rozwiazaniu optymalnym
 
 
-include produkcja_prerun.run
+include sw_produkcja_prerun.run
 
 # wybor pliku wynikowego
-let _OUT_FILE := (_PATH & "efektywne.txt");
+let _OUT_FILE := (_PATH & "wyniki/sw_efektywne.txt");
 
 # krok zmiany lambdy
 param _lambda_step default 0.1;
@@ -66,4 +73,4 @@ let _lambda_set_size := card(_LAMBDAS);
 
 printf "%-8s%-12s%s\n", "lambda", "koszt", "ryzyko" > (_OUT_FILE);
 
-include szukaj_efektywnych.run;
+include sw_szukaj_efektywnych.run;

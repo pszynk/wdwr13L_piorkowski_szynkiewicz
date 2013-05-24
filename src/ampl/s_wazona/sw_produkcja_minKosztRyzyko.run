@@ -1,7 +1,7 @@
-include produkcja_prerun.run
+include sw_produkcja_prerun.run
 
 # wybor pliku wynikowego
-let OUT_FILE := (PATH & "minKosztRyzyko.txt");
+let _OUT_FILE := (PATH & "wyniki/sw_minKosztRyzyko.txt");
 
 
 printf "%-12s%s\n", "koszt", "ryzyko" > (OUT_FILE);

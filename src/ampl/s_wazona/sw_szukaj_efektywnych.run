@@ -3,7 +3,7 @@
 ################################################################################
 ## PARAMETRY:
 ## --Zewnetrzne (ustawiane przed uruchomieniem skryptu)
-##      _OUT_FILE: plik do wypisywania znalezionych punktow
+##      __OUT_FILE: plik do wypisywania znalezionych punktow
 ##      _LAMBDAS: zbior wartosci lambda dla ktorych szukamy rozw. optym.
 ##      _lambda_set_size: rozmiar zbior wartosci lambda.
 ##      _final_cost: najwieksza wartosc kosztu dla jakiego mamy przerwac
@@ -42,15 +42,15 @@ for {_ll in _LAMBDAS} {
 
     # sprawdz czy znaleziony punkt nie przekracza rozwiazania granicznego
     if (aa_deviation <= _final_risk) or (mean >= _final_cost) then {
-            #printf "\n        %-18f%f <- finals\n", _final_cost, _final_risk >> (OUT_FILE);
+            #printf "\n        %-18f%f <- finals\n", _final_cost, _final_risk >> (_OUT_FILE);
         # czy wypisac rozwiazanie graniczne
         if _print_final then {
-            printf "%-8.4f%-12.4f%.4f\n", lambda, mean, aa_deviation >> (OUT_FILE);
+            printf "%-8.4f%-12.4f%.4f\n", lambda, mean, aa_deviation >> (_OUT_FILE);
         }
         # przerwac petle, doszlismy do ostatniego rozwiazania
         break;
     # wypisac nowy punkt optymalny
     } else {
-        printf "%-8.4f%-12.4f%.4f\n", lambda, mean, aa_deviation >> (OUT_FILE);
+        printf "%-8.4f%-12.4f%.4f\n", lambda, mean, aa_deviation >> (_OUT_FILE);
     }
 }

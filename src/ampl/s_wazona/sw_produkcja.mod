@@ -2,6 +2,20 @@
 ## ======================= PARAMETRY i ZBIORY =================================
 ## ============================================================================
 
+## POMOCNICZE: --------------------------------
+# ograniczenia na wartosc lambda
+# mamy 4 scenariusze ponumeorwane 1..4 wystepujace z prawd. 0.3 0.2 0.2 0.3
+# rownowazna sytucja bylaby dla 10 scenariuszy rownoprawdopodobynych
+# kazdy odpowiada jednemu z 4 pierwotnych scenaruszy:
+# nr.           1   2   3   4   5   6   7   8   9  10
+# prawd       0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+# scenariusz    1   1   1   2   2   3   3   4   4   4
+# czyli m = 10, limit dla lambda = m/m-1 => 10/9
+
+param MIN_lambda default 0;
+param MAX_lambda default 1.1111111111;
+
+
 ## MODELU: --------------------------------
 # zbior maszyn: (M1, M2, M3)
 set MACHINES;
@@ -35,11 +49,6 @@ param probability{1..S};
 
 # lambda to wspolczynnik awersji do ryzyka
 param lambda default 1, > MIN_lambda, < MAX_lambda;
-
-## POMOCNICZE: --------------------------------
-# ograniczenia na wartosc lambda
-param MIN_lambda default 0;
-param MAX_lambda default 2;
 
 ## ============================================================================
 ## ============================== ZMIENNE =====================================
