@@ -37,7 +37,7 @@ param _lambda_step default 0.1;
 # wartosc jaka osiaga solver przy minimalozacji
 # samego ryzyka
 param _final_risk;
-let _final_risk := 388.5;
+let _final_risk := 1554;
 
 param _final_cost;
 let _final_cost := 15240;
@@ -71,6 +71,6 @@ let _LAMBDAS :=
 
 let _lambda_set_size := card(_LAMBDAS);
 
-printf "%-8s%-12s%s\n", "lambda", "koszt", "ryzyko" > (_OUT_FILE);
+printf "#%-7s%-12s%s\n", "lambda", "koszt", "ryzyko" > (_OUT_FILE);
 
 include sw_szukaj_efektywnych.run;

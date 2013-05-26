@@ -68,7 +68,7 @@ set _LAMBDAS;
 # ustawienie najwiekszego mozliwego lambda
 let MAX_lambda := 30;
 
-printf "%-8s%-12s%s\n", "lambda", "koszt", "ryzyko" > (_OUT_FILE);
+printf "#%-7s%-12s%s\n", "lambda", "koszt", "ryzyko" > (_OUT_FILE);
 # Mamy _M rozwiazan, a wiec _M-1 przedzialow
 for {_p in 1.._M-1} {
     # Przedzial lambda to [L-s, L), gdzie L to lambda dla jakiego znaleziono
@@ -84,8 +84,14 @@ for {_p in 1.._M-1} {
     let _final_cost := _efektywne[_p+1, '_koszt'];
     let _final_risk := _efektywne[_p+1, '_ryzyko'];
 
+
+    printf "%-8.4f%-12.4f%.4f\n", _efektywne[_p, '_lambda'], _last_cost,
+            _last_risk >> (_OUT_FILE);
     include sw_szukaj_efektywnych.run;
 }
+printf "%-8.4f%-12.4f%.4f\n", _efektywne[_M, '_lambda'], _final_cost,
+            _final_risk >> (_OUT_FILE);
+
 
 
 

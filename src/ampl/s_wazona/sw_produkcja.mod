@@ -71,6 +71,10 @@ var costs{s in 1..S} >= 0;
 # [koszt] srednia kosztow ze scenariuszy (wartosc oczekiwana)
 var mean >= 0;
 
+# [ryzyko*] odchylenie semi przecietne z kosztow dla scenariuszy
+# (average absolute deviation)
+var aa_semi_deviation >=0;
+
 # [ryzyko] odchylenie przecietne z kosztow dla scenariuszy
 # (average absolute deviation)
 var aa_deviation >=0;
@@ -88,7 +92,7 @@ var _abs_handle{s in 1..S} >= 0;
 # minimalizacja kosztu i ryzyka pomnozonego przez wspolczynnik awersji do
 # ryzyka
 minimize objective_func:
-    mean  + lambda * aa_deviation;
+    mean  + lambda * aa_semi_deviation;
 
 
 
@@ -127,6 +131,11 @@ subject to s__abs_handle1 {s in 1..S}:
     mean - costs[s] <= _abs_handle[s];
 
 # [6] odchylenie przecietne z kosztow scenariuszy
+subject to s_aa_semi_deviation:
+    ( (sum{s in 1..S} _abs_handle[s] * probability[s]) ) = aa_semi_deviation;
+
+# [7] odchylenie przecietne to 2 * semi
 subject to s_aa_deviation:
-    ( (sum{s in 1..S} _abs_handle[s] * probability[s])/2 ) = aa_deviation;
+    aa_deviation  = aa_semi_deviation * 2;
+
 
