@@ -1,0 +1,16 @@
+reset;
+option solver cplex;
+
+# sceizka do plikow .mod .dat
+param _PATH symbolic;
+
+# nazwa pliku wynikowego
+param _OUT_FILE symbolic;
+
+## ustawianie sciezek
+let _PATH := "";
+
+## wczytywanie modelu
+model (_PATH & "pr_produkcja.mod");
+## wczytywanie danych
+data (_PATH & "produkcja.dat");

@@ -1,0 +1,69 @@
+################################################################################
+## Skrypt do wyszukiwanie rozwiazan optymalnych dla pewnych wartosci mean_level
+################################################################################
+## PARAMETRY:
+## --Zewnetrzne (ustawiane przed uruchomieniem skryptu)
+##      __OUT_FILE: plik do wypisywania znalezionych punktow
+##      _LEVELS: zbior wartosci mean_level dla ktorych szukamy rozw. optym.
+##      _level_set_size: rozmiar zbior wartosci mean_level.
+##      _final_cost: najwieksza wartosc kosztu dla jakiego mamy przerwac
+##                      poszukiwania
+##      _final_risk: najmniejsza wartosc ryzyka dla jakiego mamy przerwac
+##                      poszukiwania
+## --Lokalne (zmieniane w skrypcie)
+##      _epsilon: dokladnosc do porownywania liczb zmienno przecinkowych
+##      _i: do liczenia pentli
+##      _last_cost: koszt w ostatnim rozwiazaniu optymalnym
+##      _last_risk_: ryzyko w ostatnim rozwiazaniu optymalnym
+
+option solver_msg 1;
+
+let _epsilon := 0.00001;
+let _i := 0;
+
+# dla kazdej lambdy ze zbioru rozpatrywanych wartosci
+for {_ll in _LEVELS} {
+    let _i := _i + 1;
+    printf "%d/%6d -> %f\n", _i, _level_set_size, _ll;
+
+    # ustaw wartosc mean_level w modelu
+    let mean_level := _ll;
+
+    # uruchom solver;
+    solve;
+    printf "     <<< %f >>>\n", mean;
+    # jezeli koszt i ryzyko nie roznia sie od ostatnio znalezionch
+    # to nowa iteracja
+    if  ( abs(mean - _last_cost) < _epsilon) and
+        (abs(aa_deviation - _last_risk) < _epsilon) then continue;
+
+    # zapamietaj nowy punkt optymalny
+    let _last_cost := mean;
+    let _last_risk := aa_deviation;
+
+    # sprawdz czy znaleziony punkt nie przekracza rozwiazania granicznego
+    if (aa_deviation <= _final_risk) or (mean >= _final_cost) then {
+            #printf "\n        %-18f%f <- finals\n", _final_cost, _final_risk >> (_OUT_FILE);
+        # czy wypisac rozwiazanie graniczne
+        if _print_final then {
+            printf "%-12.4f%-12.4f%.4f\n", mean_level, mean, aa_deviation
+                >> (_OUT_FILE);
+            if _print_dat then {
+                let _result_counter := _result_counter + 1;
+                printf "%10s%-10d%-12.4f%-12.4f%.4f\n", "", _result_counter, mean_level, mean,
+                    aa_deviation >> (_DAT_OUT);
+            }
+        }
+        # przerwac petle, doszlismy do ostatniego rozwiazania
+        break;
+    # wypisac nowy punkt optymalny
+    } else {
+        printf "%-12.4f%-12.4f%.4f\n", mean_level, mean,
+            aa_deviation >> (_OUT_FILE);
+        if _print_dat then {
+            let _result_counter := _result_counter + 1;
+            printf "%10s%-10d%-12.4f%-12.4f%.4f\n", "", _result_counter, mean_level, mean,
+                aa_deviation >> (_DAT_OUT);
+        }
+    }
+}

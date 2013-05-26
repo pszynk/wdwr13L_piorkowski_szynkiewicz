@@ -1,0 +1,34 @@
+include pr_produkcja_prerun.run
+
+# wybor pliku wynikowego
+let _OUT_FILE := (_PATH & "wyniki/pr_minKosztRyzyko.txt");
+
+
+printf "%-12s%s\n", "koszt", "ryzyko" > (_OUT_FILE);
+
+printf "\n%s\n%s%s%s\n%s\n\n",
+"***********************************************************************",
+"**", "Rozwiazania efektywna dla minimalnego ryzyka i minimalnego kosztu", "**",
+"***********************************************************************";
+
+# usuniecie ograniczenia na poziom miary kosztu
+purge s_mean_level;
+
+printf "%s\n%s\n\n",
+"======================================",
+"Minimalny koszty";
+
+# redeklaracja funkcji celu na minimalizacje wylacznie kosztu (mean)
+redeclare minimize objective_func: mean;
+solve;
+printf "%-11.4f%f\n", mean, aa_deviation >> (_OUT_FILE);
+
+
+printf "%s\n%s\n\n",
+"======================================",
+"Minimalne ryzyko";
+
+# redeklaracja funkcji celu na minimalizacje wylacznie ryzyka (aa_deviation)
+redeclare minimize objective_func: aa_deviation;
+solve;
+printf "%-11.4f%f\n", mean, aa_deviation >> (_OUT_FILE);

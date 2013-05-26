@@ -1,0 +1,97 @@
+################################################################################
+## Ogolne poszukiwanie rozwiazan efektywnych
+################################################################################
+## Poszukiwanie polega na wyznaczaniu rozwiazania obiektywnego dla wybranych
+## wartosci mean_level (max. akceptowalnego kosztu). Zaczynając od malej wartosci
+## mean_level w kazdej iteracji wartosc parametru jest zwiekszana z krokiem 0.1
+## (duzy krok).
+## Zapisujemy kolejne rozniace sie rozwiazania.
+## Przeszukiwanie trwa az do uzyskania punktu rownowaznego minimalziacji samego
+## ryzyka
+## (PORUSZAMY SIE PO ROZWIAZANIACH PRZY WZROSCIE KOSZTU I SPADKU RYZYKA)
+################################################################################
+## PARAMETRY:
+## --Zewnetrzne (ustawiane przed uruchomieniem skryptu)
+##      _PATH: sciezka do folderu ze skryptem
+## --Lokalne (zmieniane w skrypcie)
+##      _LEVELS: zbior wartosci mean_level dla ktorych szukamy rozw. optym.
+##      _level_set_size: rozmiar zbior wartosci mean_level.
+##      _final_cost: najwieksza wartosc kosztu - dla jakiego mamy przerwac
+##                      poszukiwania
+##      _final_risk: najmniejsza wartosc ryzyka  - dla jakiego mamy przerwac
+##                      poszukiwania
+##      _epsilon: dokladnosc do porownywania liczb zmienno przecinkowych
+##      _i: do liczenia pentli
+##      _last_cost: koszt w ostatnim rozwiazaniu optymalnym
+##      _last_risk_: ryzyko w ostatnim rozwiazaniu optymalnym
+
+
+include pr_produkcja_prerun.run
+
+# wybor pliku wynikowego
+let _OUT_FILE := (_PATH & "wyniki/pr_efektywne.txt");
+
+param _DAT_OUT symbolic;
+let _DAT_OUT := (_PATH & "pr_efektywne.dat");
+
+param _print_dat;
+let _print_dat := 1;
+
+param _result_counter default 0;
+
+# krok zmiany lambdy
+param _level_step default 100;
+
+# wartosc jaka osiaga solver przy minimalozacji
+# samego ryzyka
+param _final_risk;
+let _final_risk := 1554;
+
+param _final_cost;
+let _final_cost := 15240;
+
+param _last_cost;
+let _last_cost := 0;
+
+param _last_risk;
+let _last_risk := 0;
+
+
+param _i;
+
+param _level_set_size;
+
+param _epsilon default 0.00001;
+
+param _print_final;
+let _print_final := 1;
+
+# zbior rozpatrywanych wartosci progowych kosztu
+set _LEVELS;
+
+# ustawienie najwiekszego możliwego progu
+let MAX_mean_level := 15000;
+let MIN_mean_level := 11754;
+# wyznaczenie zbioru mean_levels
+let _LEVELS :=
+    MIN_mean_level + 1 .. MAX_mean_level by _level_step;
+
+let _level_set_size := card(_LEVELS);
+
+printf "#%-11s%-12s%s\n", "level", "koszt", "ryzyko" > (_OUT_FILE);
+
+if _print_dat then {
+    printf "%s := %f;\n%s;\n", "param _level_step", _level_step,
+        "set _kolumny := _level _koszt _ryzyko" > (_DAT_OUT);
+    printf "%-20s%-12s%-12s%-12s :=\n", "param _efektywne:", "_level",
+        "_koszt", "_ryzyko" >> (_DAT_OUT);
+}
+
+include pr_szukaj_efektywnych.run;
+
+if _print_dat then {
+    printf ";\n" >> (_DAT_OUT);
+    printf "%s := %d;\n", "param _M", _result_counter >> (_DAT_OUT);
+}
+
+

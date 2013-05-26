@@ -1,0 +1,21 @@
+include pr_produkcja_prerun.run;
+
+let MIN_mean_level := 0;
+let MAX_mean_level := 40001;
+repeat {
+    printf "\nPodaj maksymalny akceptowalny poziom kosztow z przedzialu (%.3f, %.3f)\n",
+        MIN_mean_level, MAX_mean_level;
+    read mean_level <- ;
+    solve;
+    if solve_result != 'solved' then {
+        printf "\n!!! Nie znaleziono rozwiazania dla progu miary kostu = %.3f\n",
+            mean_level;
+    }
+} until solve_result = 'solved';
+
+display mean, aa_deviation;
+option display_1col 1;
+display work_time;
+display add_work_time;
+#display work_time;
+#display add_work_time;

@@ -1,0 +1,104 @@
+################################################################################
+## Dokladne poszukiwanie rozwiazan efektywnych
+################################################################################
+## Poszukiwanie polega na wyznaczaniu rozwiazania obiektywnego dla konkretnych
+## przedzialow wartosci mean_level (max. akceptowalnego kosztu) z krokiem 0.001
+## (maly krok).
+## Przedzialy wyznaczane sa na podstawie wynikow otrzymanych w ogolnym
+## poszukiwaniu rozwiazan efektwnych. Obszar poszukiwan to przedzial w ktorym
+## doszlo do wyznaczenia nowego rozwiazania optymalnego
+## Zapisujemy kolejne rozniace sie rozwiazania.
+## Przeszukiwanie trwa az do sprawdzenia wszystkich przedzialow dla mean_level.
+## (PORUSZAMY SIE PO ROZWIAZANIACH PRZY WZROSCIE KOSZTU I SPADKU RYZYKA)
+################################################################################
+## PARAMETRY:
+## --Zewnetrzne (ustawiane przed uruchomieniem skryptu)
+##      _PATH: sciezka do folderu ze skryptem
+##      _M: liczba rozwiazani efektywnych znalezionych ogolnym przeszukiwaniem
+##      _efektwyne: rozwiazania efektywne znalezione ogolnym przeszukiwaniem
+## --Lokalne (zmieniane w skrypcie)
+##      _level_smaller_step: maly krok mean_level do dokladnych poszukiwan
+##      _LEVELS: zbior wartosci mean_level dla ktorych szukamy rozw. optym.
+##      _level_set_size: rozmiar zbior wartosci mean_level.
+##      _final_cost: najwieksza wartosc kosztu - dla jakiego mamy przerwac
+##                      poszukiwania
+##      _final_risk: najmniejsza wartosc ryzyka  - dla jakiego mamy przerwac
+##                      poszukiwania
+##      _epsilon: dokladnosc do porownywania liczb zmienno przecinkowych
+##      _i: do liczenia pentli
+##      _last_cost: koszt w ostatnim rozwiazaniu optymalnym
+##      _last_risk: ryzyko w ostatnim rozwiazaniu optymalnym
+
+include pr_produkcja_prerun.run
+
+# wybor pliku wynikowego
+let _OUT_FILE := (_PATH & "wyniki/pr_efektywne_szczeg.txt");
+
+param _DAT_OUT symbolic;
+#let _DAT_OUT := (_PATH & "NONE.dat");
+
+param _print_dat;
+let _print_dat := 0;
+
+param _result_counter default 0;
+
+# ustawiam maly krok
+param _level_smaller_step default 0.5;
+
+# dane o dotychczasowo znalezionych rozw. efektwnych
+param _M;
+param _level_step;
+set _kolumny;
+param _efektywne{1.._M, _k in _kolumny};
+
+data pr_efektywne.dat;
+
+# dolne konce przedzialu poszukiwan
+param _last_cost;
+param _last_risk;
+# gorne konce przedzialu poszukiwan
+param _final_risk;
+param _final_cost;
+
+param _i;
+
+param _epsilon;
+
+# czy wypisac rozwiazanie jezeli pokryje sie z koncem przedzialu?
+param _print_final;
+let _print_final := 0;
+
+param _level_set_size;
+
+# zbior rozpatrywanych wartosci mean_level
+set _LEVELS;
+
+# ustawienie najwiekszego mozliwego mean_level
+let MAX_mean_level := 15000;
+
+printf "#%-11s%-12s%s\n", "level", "koszt", "ryzyko" > (_OUT_FILE);
+# Mamy _M rozwiazan, a wiec _M-1 przedzialow
+for {_p in 1.._M-1} {
+    # Przedzial mean_level to [L-s, L), gdzie L to mean_level dla jakiego znaleziono
+    # nowe rozwiazanie, a s to krok z jakim wyszukiwano rozwiazania (duzy)
+    let _LEVELS :=
+        _efektywne[_p+1, '_level'] - _level_step .. _efektywne[_p+1, '_level'] by _level_smaller_step;
+    let _level_set_size := card(_LEVELS);
+
+    # Nie interesuja nas juz znalezione rozwiazania (krance przedzialu)
+    let _last_cost := _efektywne[_p, '_koszt'];
+    let _last_risk := _efektywne[_p, '_ryzyko'];
+
+    let _final_cost := _efektywne[_p+1, '_koszt'];
+    let _final_risk := _efektywne[_p+1, '_ryzyko'];
+    printf "\n\n%15sPrzedzial (%-3d / %d)", "", _p, _M;
+
+    printf "%-12.4f%-12.4f%.4f\n", _efektywne[_p, '_level'], _last_cost,
+            _last_risk >> (_OUT_FILE);
+    include pr_szukaj_efektywnych.run;
+}
+printf "%-12.4f%-12.4f%.4f\n", _efektywne[_M, '_level'], _final_cost,
+            _final_risk >> (_OUT_FILE);
+
+
+
