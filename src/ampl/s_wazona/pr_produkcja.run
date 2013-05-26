@@ -1,0 +1,9 @@
+include pr_produkcja_prerun.run;
+
+repeat {
+    printf "\nPodaj maksymalny akceptowalny koszt z przedzialu (%f, %f)\n",
+        MIN_mean_level, MAX_mean_level;
+    read mean_level <- ;
+} until (mean_level > MIN_mean_level) and (mean_level < MAX_mean_level);
+
+solve;
