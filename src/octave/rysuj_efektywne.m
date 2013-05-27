@@ -7,5 +7,5 @@ sw_efekt = {"../ampl/s_wazona/wyniki/sw_efektywne.txt",
             "../ampl/s_wazona/wyniki/sw_efektywne_szczeg.txt"};
 
 rysuj_wyniki(pr_efekt, sw_efekt);
-print -dpng efekt.png;
+print -dpng -r300 "-S800,600" efekt.png;
 pause()

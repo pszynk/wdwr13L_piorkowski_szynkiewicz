@@ -1,5 +1,5 @@
 include pr_produkcja_prerun.run
-
+#option solver minos;
 # wybor pliku wynikowego
 let _OUT_FILE := (_PATH & "wyniki/pr_minKosztRyzyko.txt");
 
@@ -16,19 +16,25 @@ purge s_mean_level;
 
 printf "%s\n%s\n\n",
 "======================================",
-"Minimalny koszty";
+"Minimalny koszty" >> (_OUT_FILE);
 
 # redeklaracja funkcji celu na minimalizacje wylacznie kosztu (mean)
 redeclare minimize objective_func: mean;
 solve;
 printf "%-11.4f%f\n", mean, aa_deviation >> (_OUT_FILE);
+for {i in 1..S} {
+    printf "%4s%-3d%.2f\n","", i, costs[i] >> (_OUT_FILE);
+}
 
-
-printf "%s\n%s\n\n",
+printf "\n%s\n%s\n\n",
 "======================================",
-"Minimalne ryzyko";
+"Minimalne ryzyko" >> (_OUT_FILE);
 
 # redeklaracja funkcji celu na minimalizacje wylacznie ryzyka (aa_deviation)
 redeclare minimize objective_func: aa_deviation;
 solve;
 printf "%-11.4f%f\n", mean, aa_deviation >> (_OUT_FILE);
+
+for {i in 1..S} {
+    printf "%4s%-3d%.2f\n","", i, costs[i] >> (_OUT_FILE);
+}

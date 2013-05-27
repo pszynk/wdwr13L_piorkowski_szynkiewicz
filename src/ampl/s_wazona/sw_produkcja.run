@@ -1,9 +1,20 @@
-include pr_produkcja_prerun.run;
+include sw_produkcja_prerun.run;
 
+let MIN_lambda := 0;
+let MAX_lambda := 10;
 repeat {
-    printf "\nPodaj maksymalny akceptowalny koszt z przedzialu (%f, %f)\n",
-        MIN_mean_level, MAX_mean_level;
-    read mean_level <- ;
-} until (mean_level > MIN_mean_level) and (mean_level < MAX_mean_level);
+    printf "\nPodaj współczynnik awersji do ryzyka z przedzialu (%.3f, %.3f)\n",
+        MIN_lambda, MAX_lambda;
+    read lambda <- ;
+    solve;
+    if solve_result != 'solved' then {
+        printf "\n!!! Nie znaleziono rozwiazania współczynnika lambda = %.3f\n",
+            lambda;
+    }
+} until solve_result = 'solved';
 
-solve;
+display mean, aa_deviation;
+display costs;
+option display_1col 1;
+display work_time;
+display add_work_time;
